@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Proveedores — Serfunorte</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde:       #1a4a2e;
+  --verde-medio: #2d6e47;
+  --verde-claro: #e8f3ed;
+  --verde-borde: #b8d9c4;
+  --dorado:      #c9952a;
+  --dorado-claro:#fdf6e8;
+  --gris-fondo:  #f5f5f2;
+  --gris-borde:  #e0deda;
+  --gris-texto:  #6b6860;
+  --negro:       #1c1c1a;
+  --blanco:      #ffffff;
+  --rojo:        #c0392b;
+  --azul:        #1a5276;
+  --azul-claro:  #e8f4fd;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gris-fondo);color:var(--negro);min-height:100vh}
+
+/* ── HEADER ── */
+.header{background:var(--verde);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--dorado)}
+.header-logo{display:flex;align-items:center;gap:12px}
+.logo-circle{width:36px;height:36px;background:var(--dorado);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;color:var(--verde);font-size:16px}
+.logo-name{font-family:'DM Serif Display',serif;color:#fff;font-size:18px;line-height:1.1}
+.logo-sub{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.08em;text-transform:uppercase}
+.header-user{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.8);font-size:13px}
+.avatar{width:32px;height:32px;background:var(--dorado);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--verde);font-size:12px;font-weight:600}
+
+/* ── STEPPER ── */
+.stepper{background:#fff;border-bottom:1px solid var(--gris-borde);padding:0 2rem;display:flex;overflow-x:auto}
+.step{display:flex;align-items:center;gap:8px;padding:14px 16px;font-size:12px;font-weight:500;color:var(--gris-texto);white-space:nowrap;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+.step.active{color:var(--verde);border-bottom-color:var(--verde)}
+.step.done{color:var(--verde-medio)}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--gris-borde);color:var(--gris-texto);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.step.active .step-num{background:var(--verde);color:#fff}
+.step.done .step-num{background:var(--verde-medio);color:#fff}
+.sep{color:var(--gris-borde);font-size:18px;padding:0 2px;align-self:center}
+
+/* ── MAIN ── */
+.main{max-width:920px;margin:0 auto;padding:2rem 1.5rem}
+.sec-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--verde);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--gris-texto);margin-bottom:1.5rem}
+
+/* ── CARD ── */
+.card{background:#fff;border:1px solid var(--gris-borde);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--verde-claro)}
+.card-icon{width:32px;height:32px;background:var(--verde-claro);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.card-title{font-size:15px;font-weight:600;color:var(--verde)}
+.card-sub{font-size:12px;color:var(--gris-texto)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:5px;vertical-align:middle}
+.b-rut{background:#e8f0fe;color:#1a5276}
+.b-cam{background:#fdebd0;color:#784212}
+.b-ren{background:#e8f8f5;color:#1d6a47}
+.b-ced{background:#f4ecf7;color:#6c3483}
+.b-man{background:#fef9e7;color:#7d6608;border:1px solid #f0e68c}
+
+/* ── FORM ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.25rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem 1.25rem}
+.full{grid-column:1/-1}
+.fg{display:flex;flex-direction:column;gap:4px}
+.label{font-size:12px;font-weight:500;color:var(--negro);display:flex;align-items:center;gap:4px}
+.req{color:var(--rojo);font-size:11px}
+.input,.select,.textarea{height:38px;border:1px solid var(--gris-borde);border-radius:8px;padding:0 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--negro);background:#fff;transition:border-color .15s;outline:none}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--verde-medio);box-shadow:0 0 0 3px rgba(45,110,71,.08)}
+.input.auto{background:var(--verde-claro);border-color:var(--verde-borde);color:var(--verde)}
+.input.cedula-auto{background:#f4ecf7;border-color:#d2b4de;color:#6c3483}
+.textarea{height:80px;padding:10px 12px;resize:vertical}
+
+/* ── TIPO PERSONA ── */
+.tipo-toggle{display:flex;gap:10px;margin-bottom:1.5rem}
+.tipo-btn{flex:1;padding:12px 16px;border:2px solid var(--gris-borde);border-radius:10px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--gris-texto);transition:all .2s;text-align:center}
+.tipo-btn.active{border-color:var(--verde);background:var(--verde-claro);color:var(--verde)}
+.tipo-icon{font-size:20px;display:block;margin-bottom:4px}
+
+/* ── UPLOAD ── */
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.upload-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1rem;margin-bottom:1rem}
+.upload-zone{border:2px dashed var(--gris-borde);border-radius:10px;padding:1.25rem 1rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone:hover{border-color:var(--verde-medio);background:var(--verde-claro)}
+.upload-zone.done{border-color:var(--verde-medio);border-style:solid;background:var(--verde-claro)}
+.upload-zone.cedula-zone:hover{border-color:#8e44ad;background:#f4ecf7}
+.upload-zone.cedula-zone.done{border-color:#8e44ad;border-style:solid;background:#f4ecf7}
+.upload-check{display:none;position:absolute;top:8px;right:8px;width:20px;height:20px;background:var(--verde-medio);border-radius:50%;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.upload-zone.done .upload-check{display:flex}
+.upload-zone.cedula-zone.done .upload-check{background:#8e44ad}
+.upload-icon{font-size:28px;margin-bottom:8px}
+.upload-title{font-size:13px;font-weight:600;color:var(--negro);margin-bottom:2px}
+.upload-hint{font-size:11px;color:var(--gris-texto)}
+
+/* ── BANNERS ── */
+.banner{display:none;border-radius:10px;padding:14px 16px;margin-bottom:1rem;align-items:center;gap:12px}
+.banner.visible{display:flex}
+.banner-proc{background:var(--dorado-claro);border:1px solid var(--dorado)}
+.banner-ok{background:var(--verde-claro);border:1px solid var(--verde-borde)}
+.spinner{width:20px;height:20px;border:2px solid var(--dorado);border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── EXTRACTION RESULT ── */
+.ext-result{background:var(--verde-claro);border:1px solid var(--verde-borde);border-radius:10px;padding:14px 16px;margin-top:1rem;display:none}
+.ext-result.visible{display:block}
+.ext-title{font-size:13px;font-weight:600;color:var(--verde);margin-bottom:8px}
+.ext-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px}
+.ext-field{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--verde-borde)}
+.ext-key{color:var(--gris-texto)}
+.ext-val{color:var(--verde);font-weight:500}
+
+/* ── ALERT ── */
+.alert{background:var(--azul-claro);border:1px solid #aed6f1;border-radius:8px;padding:10px 14px;font-size:12px;color:var(--azul);margin-bottom:1rem;display:flex;align-items:flex-start;gap:8px}
+.alert-warn{background:#fef9e7;border-color:#f0e68c;color:#7d6608}
+
+/* ── ACCIONISTAS ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.tbl th{background:var(--verde-claro);color:var(--verde);font-weight:600;padding:8px 10px;text-align:left;border-bottom:1px solid var(--verde-borde)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--gris-borde);vertical-align:middle}
+.tbl td input,.tbl td select{width:100%;border:1px solid var(--gris-borde);border-radius:6px;padding:4px 8px;font-size:12px;height:28px}
+
+/* ── SARLAFT ── */
+.radio-g{display:flex;gap:16px;margin-top:4px}
+.radio-l{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+.check-g{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.check-l{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+
+/* ══════════════════════════════════════════
+   FIRMA DIGITAL
+══════════════════════════════════════════ */
+.firma-container{background:#fff;border:1px solid var(--gris-borde);border-radius:12px;overflow:hidden;margin-bottom:1.25rem}
+.firma-tabs{display:flex;border-bottom:1px solid var(--gris-borde)}
+.firma-tab{flex:1;padding:12px;text-align:center;font-size:13px;font-weight:500;color:var(--gris-texto);cursor:pointer;background:#fff;border:none;transition:all .2s;border-bottom:3px solid transparent}
+.firma-tab.active{color:var(--verde);border-bottom-color:var(--verde);background:var(--verde-claro)}
+.firma-panel{display:none;padding:1.25rem}
+.firma-panel.active{display:block}
+
+/* Canvas firma */
+.canvas-wrap{position:relative;border:2px dashed var(--gris-borde);border-radius:10px;background:#fafaf8;overflow:hidden;transition:border-color .2s}
+.canvas-wrap.has-sig{border-color:var(--verde-medio);border-style:solid}
+#sigCanvas{display:block;width:100%;height:200px;cursor:crosshair;touch-action:none}
+.canvas-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;transition:opacity .3s}
+.canvas-hint-icon{font-size:32px;margin-bottom:8px;display:block}
+.canvas-hint-text{font-size:12px;color:var(--gris-texto)}
+.canvas-wrap.has-sig .canvas-hint{opacity:0}
+
+.canvas-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.color-picker-wrap{display:flex;gap:8px;align-items:center}
+.color-swatch{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.color-swatch.active{border-color:var(--negro);transform:scale(1.15)}
+.canvas-btns{display:flex;gap:8px}
+.btn-sm{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--gris-borde);background:#fff;color:var(--negro);font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-sm:hover{background:var(--gris-fondo)}
+.btn-sm.danger{border-color:#e8c3c0;color:var(--rojo)}
+.btn-sm.danger:hover{background:#fdf0ef}
+
+/* Upload firma */
+.firma-upload-zone{border:2px dashed var(--gris-borde);border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s}
+.firma-upload-zone:hover{border-color:var(--verde-medio);background:var(--verde-claro)}
+.firma-upload-zone.done{border-color:var(--verde-medio);border-style:solid;background:var(--verde-claro)}
+.firma-preview{max-width:100%;max-height:200px;border-radius:8px;display:none;margin:0 auto}
+
+/* Estado firma */
+.firma-status{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-top:10px}
+.firma-status.empty{background:#fef9e7;color:#7d6608;border:1px solid #f0e68c}
+.firma-status.ok{background:var(--verde-claro);color:var(--verde);border:1px solid var(--verde-borde)}
+
+/* ── REVISIÓN TABS ── */
+.rev-tabs{display:flex;gap:0;border-bottom:1px solid var(--gris-borde);margin-bottom:1.5rem;overflow-x:auto}
+.rev-tab{padding:10px 18px;font-size:13px;font-weight:500;color:var(--gris-texto);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.rev-tab.active{color:var(--verde);border-bottom-color:var(--verde)}
+.rev-panel{display:none}
+.rev-panel.active{display:block}
+.rev-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px}
+.rev-field{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--gris-borde)}
+.rev-key{color:var(--gris-texto)}
+.rev-val{color:var(--negro);font-weight:500}
+
+/* ── BOTONES ── */
+.btn-primary{background:var(--verde);color:#fff;border:none;border-radius:8px;padding:11px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .2s}
+.btn-primary:hover{background:var(--verde-medio)}
+.btn-secondary{background:#fff;color:var(--verde);border:1px solid var(--verde-borde);border-radius:8px;padding:11px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{background:var(--verde-claro)}
+.btn-dorado{background:var(--dorado);color:var(--verde);border:none;border-radius:8px;padding:11px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s}
+.btn-dorado:hover{opacity:.9}
+.btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1rem;border-top:1px solid var(--gris-borde)}
+.btn-add{font-size:12px;color:var(--verde);background:none;border:none;cursor:pointer;margin-top:8px}
+
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--verde) 0%,#0d2e1a 60%,#1a1a0e 100%);padding:2rem}
+.login-card{background:#fff;border-radius:16px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{text-align:center;margin-bottom:2rem}
+.login-circle{width:64px;height:64px;background:var(--verde);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:3px solid var(--dorado)}
+.login-letter{font-family:'DM Serif Display',serif;color:#fff;font-size:28px}
+.login-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--verde);text-align:center}
+.login-sub{font-size:12px;color:var(--gris-texto);text-align:center;margin-top:4px}
+.login-div{height:1px;background:var(--gris-borde);margin:1.5rem 0}
+.login-form .fg{margin-bottom:1rem}
+.login-form .label{font-size:13px;margin-bottom:6px}
+.login-form .input{width:100%}
+.login-btn{width:100%;padding:13px;margin-top:.5rem;font-size:15px}
+.login-link{text-align:center;font-size:12px;color:var(--gris-texto);margin-top:1rem}
+.login-link a{color:var(--verde);text-decoration:none}
+.login-demo{margin-top:1.5rem;background:var(--verde-claro);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--gris-texto)}
+
+/* ── PANEL CONTROL ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── FOOTER ── */
+.footer{background:var(--verde);color:rgba(255,255,255,.45);text-align:center;padding:16px;font-size:11px;margin-top:3rem}
+
+@media(max-width:640px){
+  .grid2,.grid3,.upload-grid-4{grid-template-columns:1fr}
+  .full{grid-column:1}
+  .ext-fields,.rev-fields{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-circle"><span class="login-letter">S</span></div>
+      <div class="login-title">Portal de Proveedores</div>
+      <div class="login-sub">Serfunorte · Los Olivos · Cúcuta</div>
+    </div>
+    <div class="login-div"></div>
+    <div class="login-form">
+      <div class="fg"><label class="label">Correo electrónico</label><input class="input" type="email" placeholder="proveedor@empresa.com"></div>
+      <div class="fg"><label class="label">Contraseña</label><input class="input" type="password" placeholder="••••••••"></div>
+      <button class="btn-primary login-btn" onclick="doLogin()">Ingresar al portal</button>
+      <div class="login-link">¿Primera vez? <a href="#">Crear cuenta</a> &nbsp;|&nbsp; <a href="#">Olvidé mi contraseña</a></div>
+    </div>
+    <div class="login-demo"><strong style="color:var(--verde)">Demo:</strong> ingrese cualquier credencial para continuar</div>
+  </div>
+</div>
+
+<!-- ══ PORTAL ══ -->
+<div id="portalScreen" style="display:none">
+
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-circle">S</div>
+      <div><div class="logo-name">Serfunorte · Los Olivos</div><div class="logo-sub">Portal de Proveedores</div></div>
+    </div>
+    <div class="header-user">
+      <div class="avatar">YQ</div>
+      <span>Yury Quintero</span>
+    </div>
+  </header>
+
+  <div class="stepper">
+    <div class="step done"    onclick="go(1)"><div class="step-num" id="sn1">✓</div>Documentos</div>
+    <span class="sep">›</span>
+    <div class="step active"  onclick="go(2)"><div class="step-num" id="sn2">2</div>Datos básicos</div>
+    <span class="sep">›</span>
+    <div class="step"         onclick="go(3)"><div class="step-num" id="sn3">3</div>Financiero</div>
+    <span class="sep">›</span>
+    <div class="step"         onclick="go(4)"><div class="step-num" id="sn4">4</div>Referencias</div>
+    <span class="sep">›</span>
+    <div class="step"         onclick="go(5)"><div class="step-num" id="sn5">5</div>SARLAFT</div>
+    <span class="sep">›</span>
+    <div class="step"         onclick="go(6)"><div class="step-num" id="sn6">6</div>Revisión y firma</div>
+  </div>
+
+  <div class="main">
+
+    <!-- ═══ PASO 1 — DOCUMENTOS ═══ -->
+    <div class="panel" id="p1">
+      <div class="sec-title">Carga de documentos</div>
+      <div class="sec-sub">Adjunte los 4 documentos. El sistema extraerá automáticamente la información disponible.</div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📁</div>
+          <div><div class="card-title">Documentos requeridos</div><div class="card-sub">PDF · JPG · PNG — máximo 10 MB por archivo</div></div>
+        </div>
+
+        <div class="upload-grid-4">
+          <div class="upload-zone" id="z-rut" onclick="simUpload('rut')">
+            <div class="upload-check">✓</div>
+            <div class="upload-icon">📄</div>
+            <div class="upload-title">RUT</div>
+            <div class="upload-hint">Registro Único Tributario<br>año en curso</div>
+          </div>
+          <div class="upload-zone" id="z-cam" onclick="simUpload('cam')">
+            <div class="upload-check">✓</div>
+            <div class="upload-icon">🏛️</div>
+            <div class="upload-title">Cámara de Comercio</div>
+            <div class="upload-hint">Certificado de existencia<br>no mayor a 30 días</div>
+          </div>
+          <div class="upload-zone" id="z-ren" onclick="simUpload('ren')">
+            <div class="upload-check">✓</div>
+            <div class="upload-icon">📊</div>
+            <div class="upload-title">Declaración de Renta</div>
+            <div class="upload-hint">Último período gravable<br>disponible</div>
+          </div>
+          <div class="upload-zone cedula-zone" id="z-ced" onclick="simUpload('ced')">
+            <div class="upload-check">✓</div>
+            <div class="upload-icon">🪪</div>
+            <div class="upload-title">Cédula R.L.</div>
+            <div class="upload-hint">Cédula del Representante<br>Legal (ambas caras)</div>
+          </div>
+        </div>
+
+        <div class="alert alert-warn">
+          ⚠️ La cédula del Representante Legal debe incluir <strong>ambas caras</strong> del documento en un solo archivo PDF o imagen, para extraer fecha y lugar de expedición, y fecha y lugar de nacimiento.
+        </div>
+
+        <div class="banner banner-proc" id="proc-banner">
+          <div class="spinner"></div>
+          <div><strong style="font-size:13px">Extrayendo información de los 4 documentos…</strong><br><span style="font-size:12px;color:var(--gris-texto)">RUT · Cámara · Renta · Cédula procesándose en paralelo. Unos segundos…</span></div>
+        </div>
+
+        <div class="ext-result" id="ext-result">
+          <div class="ext-title">✅ Extracción completada — campos detectados automáticamente</div>
+          <div class="ext-fields">
+            <div class="ext-field"><span class="ext-key">NIT</span><span class="ext-val">60361189-1</span></div>
+            <div class="ext-field"><span class="ext-key">Nombre completo</span><span class="ext-val">Quintero Gomez Yury Vanessa</span></div>
+            <div class="ext-field"><span class="ext-key">Nombre comercial</span><span class="ext-val">Cúcuta Online Tu Red</span></div>
+            <div class="ext-field"><span class="ext-key">Municipio</span><span class="ext-val">Cúcuta, Norte de Santander</span></div>
+            <div class="ext-field"><span class="ext-key">CIIU principal</span><span class="ext-val">M7310</span></div>
+            <div class="ext-field"><span class="ext-key">Correo</span><span class="ext-val">yuryvane29@gmail.com</span></div>
+            <div class="ext-field"><span class="ext-key">Total activos</span><span class="ext-val">$127.293.000</span></div>
+            <div class="ext-field"><span class="ext-key">Patrimonio</span><span class="ext-val">$119.189.000</span></div>
+            <div class="ext-field"><span class="ext-key">RL — Fecha expedición CC</span><span class="ext-val" style="color:#6c3483">2015-03-20 ✦ Cédula</span></div>
+            <div class="ext-field"><span class="ext-key">RL — Lugar expedición</span><span class="ext-val" style="color:#6c3483">Cúcuta ✦ Cédula</span></div>
+            <div class="ext-field"><span class="ext-key">RL — Fecha nacimiento</span><span class="ext-val" style="color:#6c3483">1985-07-12 ✦ Cédula</span></div>
+            <div class="ext-field"><span class="ext-key">RL — Lugar nacimiento</span><span class="ext-val" style="color:#6c3483">Cúcuta ✦ Cédula</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <div style="font-size:12px;color:var(--gris-texto)">Clic en cada zona para simular la carga</div>
+        <button class="btn-primary" onclick="go(2)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ═══ PASO 2 — DATOS BÁSICOS ═══ -->
+    <div class="panel active" id="p2">
+      <div class="sec-title">Datos básicos del proveedor</div>
+      <div class="sec-sub">Campos con fondo verde → RUT/Cámara · Fondo morado → Cédula · Blanco → ingreso manual.</div>
+
+      <div class="tipo-toggle">
+        <button class="tipo-btn" id="btnN" onclick="setTipo('n')"><span class="tipo-icon">👤</span>Persona Natural</button>
+        <button class="tipo-btn active" id="btnJ" onclick="setTipo('j')"><span class="tipo-icon">🏢</span>Persona Jurídica</button>
+      </div>
+
+      <!-- PERSONA JURÍDICA -->
+      <div id="sec-j">
+        <div class="card">
+          <div class="card-head"><div class="card-icon">🏢</div><div><div class="card-title">Empresa <span class="badge b-rut">RUT</span><span class="badge b-cam">Cámara</span></div></div></div>
+          <div class="grid2">
+            <div class="fg full"><label class="label">Razón Social <span class="badge b-rut">RUT</span><span class="badge b-cam">Cámara</span></label><input class="input auto" value="QUINTERO GOMEZ YURY VANESSA" readonly></div>
+            <div class="fg"><label class="label">Nombre comercial <span class="badge b-rut">RUT</span></label><input class="input auto" value="CÚCUTA ONLINE TU RED" readonly></div>
+            <div class="fg"><label class="label">NIT <span class="badge b-rut">RUT</span></label><input class="input auto" value="60361189-1" readonly></div>
+            <div class="fg"><label class="label">Tipo de empresa <span class="req">*</span> <span class="badge b-man">Manual</span></label><select class="select"><option>-- Seleccione --</option><option>Privada</option><option>Mixta</option><option>Pública</option><option>Empresa Solidaria</option><option>Otra</option></select></div>
+            <div class="fg"><label class="label">Fecha constitución <span class="badge b-cam">Cámara</span></label><input class="input auto" value="11 de agosto de 2021" readonly></div>
+            <div class="fg"><label class="label">País constitución <span class="badge b-cam">Cámara</span></label><input class="input auto" value="Colombia" readonly></div>
+            <div class="fg"><label class="label">CIIU principal <span class="badge b-rut">RUT</span></label><input class="input auto" value="M7310" readonly></div>
+            <div class="fg"><label class="label">CIIU secundario <span class="badge b-cam">Cámara</span></label><input class="input auto" value="G4791" readonly></div>
+            <div class="fg full"><label class="label">Actividad económica <span class="badge b-cam">Cámara</span></label><input class="input auto" value="Publicidad en medios digitales. Comercio al por menor por internet." readonly></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-icon">📍</div><div><div class="card-title">Ubicación <span class="badge b-cam">Cámara</span></div></div></div>
+          <div class="grid3">
+            <div class="fg full"><label class="label">Dirección domicilio <span class="badge b-cam">Cámara</span></label><input class="input auto" value="CL 6 NRO 8-60 APTO 602B ED TORRES DEL ESTE" readonly></div>
+            <div class="fg"><label class="label">Municipio <span class="badge b-cam">Cámara</span></label><input class="input auto" value="Cúcuta" readonly></div>
+            <div class="fg"><label class="label">Departamento <span class="badge b-cam">Cámara</span></label><input class="input auto" value="Norte de Santander" readonly></div>
+            <div class="fg"><label class="label">Código postal <span class="badge b-rut">RUT</span></label><input class="input auto" value="54001" readonly></div>
+            <div class="fg"><label class="label">Teléfono fijo <span class="badge b-cam">Cámara</span></label><input class="input auto" value="3173746161" readonly></div>
+            <div class="fg"><label class="label">Celular <span class="badge b-cam">Cámara</span></label><input class="input auto" value="3173746161" readonly></div>
+            <div class="fg full"><label class="label">Correo electrónico <span class="badge b-cam">Cámara</span></label><input class="input auto" value="yuryvane29@gmail.com" readonly></div>
+            <div class="fg"><label class="label">Persona de contacto <span class="req">*</span> <span class="badge b-man">Manual</span></label><input class="input" placeholder="Nombre del contacto"></div>
+            <div class="fg"><label class="label">Teléfono contacto <span class="req">*</span> <span class="badge b-man">Manual</span></label><input class="input" placeholder="Número de teléfono"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-icon">👤</div><div><div class="card-title">Representante Legal <span class="badge b-cam">Cámara</span><span class="badge b-ced">Cédula</span></div></div></div>
+          <div class="grid2">
+            <div class="fg full"><label class="label">Nombres y apellidos <span class="badge b-cam">Cámara</span></label><input class="input auto" value="QUINTERO GOMEZ YURY VANESSA" readonly></div>
+            <div class="fg"><label class="label">Tipo de documento <span class="badge b-cam">Cámara</span></label><input class="input auto" value="Cédula de Ciudadanía" readonly></div>
+            <div class="fg"><label class="label">Número de documento <span class="badge b-cam">Cámara</span></label><input class="input auto" value="60361189" readonly></div>
+
+            <!-- ★ Campos antes MANUAL, ahora extraídos de la cédula ★ -->
+            <div class="fg"><label class="label">Fecha de expedición <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="2015-03-20" readonly></div>
+            <div class="fg"><label class="label">Lugar de expedición <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="Cúcuta" readonly></div>
+            <div class="fg"><label class="label">Fecha de nacimiento <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="1985-07-12" readonly></div>
+            <div class="fg"><label class="label">Lugar de nacimiento <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="Cúcuta" readonly></div>
+
+            <div class="fg"><label class="label">Correo electrónico RL <span class="badge b-cam">Cámara</span></label><input class="input auto" value="yuryvane29@gmail.com" readonly></div>
+            <div class="fg"><label class="label">Teléfono RL <span class="badge b-cam">Cámara</span></label><input class="input auto" value="3173746161" readonly></div>
+            <div class="fg full"><label class="label">Dirección domicilio RL <span class="badge b-cam">Cámara</span></label><input class="input auto" value="CL 6 NRO 8-60 APTO 602B ED TORRES DEL ESTE" readonly></div>
+          </div>
+          <div class="alert" style="margin-top:1rem;margin-bottom:0">
+            <span>🪪</span>
+            Los campos con fondo morado fueron extraídos automáticamente de la <strong>Cédula de Ciudadanía</strong> del Representante Legal. Verifique que los datos sean correctos antes de continuar.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-icon">📋</div><div><div class="card-title">Accionistas / Propietarios <span class="badge b-man">Manual</span></div><div class="card-sub">Con más del 5% de participación directa o indirecta</div></div></div>
+          <table class="tbl">
+            <thead><tr><th>Tipo doc.</th><th>Número</th><th>Razón social / Nombre</th><th>Rec. públicos</th><th>PEP</th><th>% Part.</th></tr></thead>
+            <tbody id="acBody">
+              <tr>
+                <td><select><option>CC</option><option>PAS</option><option>NIT</option></select></td>
+                <td><input type="text" placeholder="Número"></td>
+                <td><input type="text" placeholder="Nombre o razón social"></td>
+                <td><select><option>NO</option><option>SI</option></select></td>
+                <td><select><option>NO</option><option>SI</option></select></td>
+                <td><input type="number" placeholder="%" min="0" max="100"></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn-add" onclick="addRow()">+ Agregar accionista</button>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-icon">ℹ️</div><div><div class="card-title">Información general <span class="badge b-man">Manual</span></div></div></div>
+          <div class="grid2">
+            <div class="fg full"><label class="label">Productos o servicios que suministra <span class="req">*</span></label><textarea class="textarea" placeholder="Describa los productos o servicios que ofrecerá a Serfunorte…"></textarea></div>
+            <div class="fg"><label class="label">¿Sistema de gestión certificado? <span class="req">*</span></label><select class="select"><option>-- Seleccione --</option><option>No</option><option>Sí</option></select></div>
+            <div class="fg"><label class="label">¿Cuál certificación?</label><input class="input" placeholder="ISO 9001, ISO 14001…"></div>
+            <div class="fg"><label class="label">Total de empleados <span class="req">*</span></label><input class="input" type="number" placeholder="Número de empleados"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONA NATURAL -->
+      <div id="sec-n" style="display:none">
+        <div class="card">
+          <div class="card-head"><div class="card-icon">👤</div><div><div class="card-title">Datos personales <span class="badge b-rut">RUT</span><span class="badge b-ced">Cédula</span></div></div></div>
+          <div class="grid2">
+            <div class="fg full"><label class="label">Nombre completo <span class="badge b-rut">RUT</span></label><input class="input auto" value="QUINTERO GOMEZ YURY VANESSA" readonly></div>
+            <div class="fg"><label class="label">N.º de identificación <span class="badge b-rut">RUT</span></label><input class="input auto" value="60361189" readonly></div>
+            <div class="fg"><label class="label">Tipo de documento <span class="badge b-rut">RUT</span></label><input class="input auto" value="Cédula de Ciudadanía" readonly></div>
+            <div class="fg"><label class="label">Fecha de expedición <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="2015-03-20" readonly></div>
+            <div class="fg"><label class="label">Lugar de expedición <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="Cúcuta" readonly></div>
+            <div class="fg"><label class="label">Fecha de nacimiento <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="1985-07-12" readonly></div>
+            <div class="fg"><label class="label">Lugar de nacimiento <span class="badge b-ced">Cédula</span></label><input class="input cedula-auto" value="Cúcuta" readonly></div>
+            <div class="fg"><label class="label">Municipio <span class="badge b-rut">RUT</span></label><input class="input auto" value="Cúcuta" readonly></div>
+            <div class="fg"><label class="label">Departamento <span class="badge b-rut">RUT</span></label><input class="input auto" value="Norte de Santander" readonly></div>
+            <div class="fg"><label class="label">Correo electrónico <span class="badge b-rut">RUT</span></label><input class="input auto" value="yuryvane29@gmail.com" readonly></div>
+            <div class="fg"><label class="label">Estrato residencia <span class="req">*</span> <span class="badge b-man">Manual</span></label><select class="select"><option>--</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+            <div class="fg"><label class="label">Estado civil <span class="req">*</span> <span class="badge b-man">Manual</span></label><select class="select"><option>--</option><option>Soltero/a</option><option>Casado/a</option><option>Unión libre</option><option>Divorciado/a</option><option>Viudo/a</option></select></div>
+            <div class="fg"><label class="label">Ocupación / Profesión <span class="req">*</span> <span class="badge b-man">Manual</span></label><input class="input" placeholder="Descripción de la ocupación"></div>
+          </div>
+          <div class="alert" style="margin-top:1rem;margin-bottom:0">
+            <span>🪪</span>
+            Los campos con fondo morado (fecha/lugar de expedición y nacimiento) fueron extraídos de la <strong>Cédula adjunta</strong> y ya no requieren ingreso manual.
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="go(1)">← Volver</button>
+        <button class="btn-primary" onclick="go(3)">Continuar con datos financieros →</button>
+      </div>
+    </div>
+
+    <!-- ═══ PASO 3 — FINANCIERO ═══ -->
+    <div class="panel" id="p3">
+      <div class="sec-title">Información financiera</div>
+      <div class="sec-sub">Datos extraídos de la Declaración de Renta 2023. Verifique y corrija si es necesario.</div>
+      <div class="card">
+        <div class="card-head"><div class="card-icon">📊</div><div><div class="card-title">Estado financiero <span class="badge b-ren">Declaración de Renta</span></div><div class="card-sub">Período gravable 2023</div></div></div>
+        <div class="grid3" style="margin-bottom:1rem">
+          <div class="fg"><label class="label">Año gravable</label><input class="input auto" value="2023" readonly></div>
+          <div class="fg"><label class="label">Mes corte</label><input class="input auto" value="12" readonly></div>
+          <div class="fg"><label class="label">Día corte</label><input class="input auto" value="31" readonly></div>
+        </div>
+        <div class="grid2">
+          <div class="fg"><label class="label">Total activos <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 127.293.000" readonly></div>
+          <div class="fg"><label class="label">Total pasivos <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 8.104.000" readonly></div>
+          <div class="fg"><label class="label">Total patrimonio <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 119.189.000" readonly></div>
+          <div class="fg"><label class="label">Utilidad operacional <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 49.302.000" readonly></div>
+          <div class="fg"><label class="label">Ingresos mensuales estimados <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 4.108.500" readonly></div>
+          <div class="fg"><label class="label">Egresos mensuales estimados <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 226.500" readonly></div>
+          <div class="fg"><label class="label">Otros ingresos <span class="badge b-ren">Renta</span></label><input class="input auto" value="$ 1.120.000" readonly></div>
+          <div class="fg"><label class="label">Derivados <span class="badge b-man">Manual</span></label><input class="input" placeholder="Ingrese si aplica"></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="go(2)">← Volver</button>
+        <button class="btn-primary" onclick="go(4)">Continuar con referencias →</button>
+      </div>
+    </div>
+
+    <!-- ═══ PASO 4 — REFERENCIAS ═══ -->
+    <div class="panel" id="p4">
+      <div class="sec-title">Referencias</div>
+      <div class="sec-sub">Registre mínimo una referencia bancaria y una comercial.</div>
+      <div class="card">
+        <div class="card-head"><div class="card-icon">🏦</div><div><div class="card-title">Referencias bancarias <span class="badge b-man">Manual</span></div></div></div>
+        <div class="grid2" style="margin-bottom:.75rem">
+          <div class="fg"><label class="label">Entidad 1 <span class="req">*</span></label><input class="input" placeholder="Nombre del banco"></div>
+          <div class="fg"><label class="label">Número de cuenta <span class="req">*</span></label><input class="input" placeholder="Cuenta corriente o ahorros"></div>
+          <div class="fg"><label class="label">Teléfono</label><input class="input" placeholder="Teléfono"></div>
+          <div class="fg"><label class="label">Ciudad</label><input class="input" placeholder="Ciudad"></div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--gris-borde);margin:.75rem 0">
+        <div class="grid2">
+          <div class="fg"><label class="label">Entidad 2</label><input class="input" placeholder="Nombre del banco"></div>
+          <div class="fg"><label class="label">Número de cuenta</label><input class="input" placeholder="Cuenta corriente o ahorros"></div>
+          <div class="fg"><label class="label">Teléfono</label><input class="input" placeholder="Teléfono"></div>
+          <div class="fg"><label class="label">Ciudad</label><input class="input" placeholder="Ciudad"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-icon">🤝</div><div><div class="card-title">Referencias comerciales <span class="badge b-man">Manual</span></div></div></div>
+        <div class="grid2" style="margin-bottom:.75rem">
+          <div class="fg"><label class="label">Empresa 1 <span class="req">*</span></label><input class="input" placeholder="Nombre de la empresa"></div>
+          <div class="fg"><label class="label">Contacto</label><input class="input" placeholder="Nombre del contacto"></div>
+          <div class="fg"><label class="label">Dirección</label><input class="input" placeholder="Dirección"></div>
+          <div class="fg"><label class="label">Teléfono</label><input class="input" placeholder="Teléfono"></div>
+          <div class="fg"><label class="label">Ciudad</label><input class="input" placeholder="Ciudad"></div>
+          <div class="fg"><label class="label">Actividad / Relación</label><input class="input" placeholder="Tipo de relación"></div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--gris-borde);margin:.75rem 0">
+        <div class="grid2">
+          <div class="fg"><label class="label">Empresa 2</label><input class="input" placeholder="Nombre de la empresa"></div>
+          <div class="fg"><label class="label">Contacto</label><input class="input" placeholder="Nombre del contacto"></div>
+          <div class="fg"><label class="label">Dirección</label><input class="input" placeholder="Dirección"></div>
+          <div class="fg"><label class="label">Teléfono</label><input class="input" placeholder="Teléfono"></div>
+          <div class="fg"><label class="label">Ciudad</label><input class="input" placeholder="Ciudad"></div>
+          <div class="fg"><label class="label">Actividad / Relación</label><input class="input" placeholder="Tipo de relación"></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="go(3)">← Volver</button>
+        <button class="btn-primary" onclick="go(5)">Continuar con SARLAFT →</button>
+      </div>
+    </div>
+
+    <!-- ═══ PASO 5 — SARLAFT ═══ -->
+    <div class="panel" id="p5">
+      <div class="sec-title">Gestión antilavado — SARLAFT</div>
+      <div class="sec-sub">Sección VI del R-44. Responda bajo la gravedad de juramento.</div>
+      <div class="card">
+        <div class="card-head"><div class="card-icon">🛡️</div><div><div class="card-title">Prevención de LA/FT <span class="badge b-man">Manual</span></div></div></div>
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">¿Dispone de medios para prevenir el lavado de activos? <span class="req">*</span></label><div class="radio-g"><label class="radio-l"><input type="radio" name="l1" value="si"> Sí</label><label class="radio-l"><input type="radio" name="l1" value="no" checked> No</label></div></div>
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">Documentos con los que cuenta:</label><div class="check-g"><label class="check-l"><input type="checkbox"> Código de Conducta</label><label class="check-l"><input type="checkbox"> Manual SIPLAFT</label><label class="check-l"><input type="checkbox"> Manual de Procedimientos</label><label class="check-l"><input type="checkbox"> Manual SARLAFT</label></div></div>
+        <hr style="border:none;border-top:1px solid var(--gris-borde);margin:0 0 1.25rem">
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">¿Maneja recursos públicos? <span class="req">*</span></label><div class="radio-g"><label class="radio-l"><input type="radio" name="l2" value="si"> Sí</label><label class="radio-l"><input type="radio" name="l2" value="no" checked> No</label></div></div>
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">¿Es Persona Políticamente Expuesta (PEP)? <span class="req">*</span></label><div class="radio-g"><label class="radio-l"><input type="radio" name="l3" value="si"> Sí</label><label class="radio-l"><input type="radio" name="l3" value="no" checked> No</label></div></div>
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">¿Tiene vínculo familiar con un PEP? <span class="req">*</span></label><div class="radio-g"><label class="radio-l"><input type="radio" name="l4" value="si"> Sí</label><label class="radio-l"><input type="radio" name="l4" value="no" checked> No</label></div></div>
+        <hr style="border:none;border-top:1px solid var(--gris-borde);margin:0 0 1.25rem">
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">¿Efectúa operaciones en moneda extranjera? <span class="req">*</span></label><div class="radio-g"><label class="radio-l"><input type="radio" name="l5" value="si"> Sí</label><label class="radio-l"><input type="radio" name="l5" value="no" checked> No</label></div></div>
+        <div class="fg" style="margin-bottom:1.25rem"><label class="label">¿Ha sido sancionado por procesos de LA/FT? <span class="req">*</span></label><div class="radio-g"><label class="radio-l"><input type="radio" name="l6" value="si"> Sí</label><label class="radio-l"><input type="radio" name="l6" value="no" checked> No</label></div></div>
+        <div class="fg"><label class="label">Declaración del origen de fondos <span class="req">*</span></label><textarea class="textarea" placeholder="Declare el origen de sus recursos (ej: ingresos por actividad comercial lícita de prestación de servicios de publicidad digital)…"></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="go(4)">← Volver</button>
+        <button class="btn-primary" onclick="go(6)">Continuar a revisión →</button>
+      </div>
+    </div>
+
+    <!-- ═══ PASO 6 — REVISIÓN Y FIRMA ═══ -->
+    <div class="panel" id="p6">
+      <div class="sec-title">Revisión y firma</div>
+      <div class="sec-sub">Verifique el resumen, firme y envíe el formulario R-44 a Serfunorte.</div>
+
+      <!-- Resumen -->
+      <div class="card">
+        <div class="card-head"><div class="card-icon">📋</div><div><div class="card-title">Resumen del formulario R-44 Versión 09</div></div></div>
+        <div class="rev-tabs">
+          <div class="rev-tab active" onclick="revTab('rt-datos',this)">Datos básicos</div>
+          <div class="rev-tab" onclick="revTab('rt-fin',this)">Financiero</div>
+          <div class="rev-tab" onclick="revTab('rt-rl',this)">Representante legal</div>
+          <div class="rev-tab" onclick="revTab('rt-docs',this)">Documentos</div>
+        </div>
+        <div id="rt-datos" class="rev-panel active">
+          <div class="rev-fields">
+            <div class="rev-field"><span class="rev-key">Tipo persona</span><span class="rev-val">Jurídica</span></div>
+            <div class="rev-field"><span class="rev-key">Razón social</span><span class="rev-val">Quintero Gomez Yury Vanessa</span></div>
+            <div class="rev-field"><span class="rev-key">NIT</span><span class="rev-val">60361189-1</span></div>
+            <div class="rev-field"><span class="rev-key">Nombre comercial</span><span class="rev-val">Cúcuta Online Tu Red</span></div>
+            <div class="rev-field"><span class="rev-key">Municipio</span><span class="rev-val">Cúcuta, Norte de Santander</span></div>
+            <div class="rev-field"><span class="rev-key">CIIU</span><span class="rev-val">M7310</span></div>
+            <div class="rev-field"><span class="rev-key">Correo</span><span class="rev-val">yuryvane29@gmail.com</span></div>
+            <div class="rev-field"><span class="rev-key">Teléfono</span><span class="rev-val">3173746161</span></div>
+          </div>
+        </div>
+        <div id="rt-fin" class="rev-panel">
+          <div class="rev-fields">
+            <div class="rev-field"><span class="rev-key">Año gravable</span><span class="rev-val">2023</span></div>
+            <div class="rev-field"><span class="rev-key">Total activos</span><span class="rev-val">$127.293.000</span></div>
+            <div class="rev-field"><span class="rev-key">Total pasivos</span><span class="rev-val">$8.104.000</span></div>
+            <div class="rev-field"><span class="rev-key">Patrimonio</span><span class="rev-val">$119.189.000</span></div>
+            <div class="rev-field"><span class="rev-key">Utilidad operacional</span><span class="rev-val">$49.302.000</span></div>
+            <div class="rev-field"><span class="rev-key">Ingresos mensuales</span><span class="rev-val">$4.108.500</span></div>
+          </div>
+        </div>
+        <div id="rt-rl" class="rev-panel">
+          <div class="rev-fields">
+            <div class="rev-field"><span class="rev-key">Nombre R.L.</span><span class="rev-val">Quintero Gomez Yury Vanessa</span></div>
+            <div class="rev-field"><span class="rev-key">Documento</span><span class="rev-val">CC 60361189</span></div>
+            <div class="rev-field"><span class="rev-key">Fecha expedición</span><span class="rev-val" style="color:#6c3483">2015-03-20 ✦ Cédula</span></div>
+            <div class="rev-field"><span class="rev-key">Lugar expedición</span><span class="rev-val" style="color:#6c3483">Cúcuta ✦ Cédula</span></div>
+            <div class="rev-field"><span class="rev-key">Fecha nacimiento</span><span class="rev-val" style="color:#6c3483">1985-07-12 ✦ Cédula</span></div>
+            <div class="rev-field"><span class="rev-key">Lugar nacimiento</span><span class="rev-val" style="color:#6c3483">Cúcuta ✦ Cédula</span></div>
+            <div class="rev-field"><span class="rev-key">Correo</span><span class="rev-val">yuryvane29@gmail.com</span></div>
+          </div>
+        </div>
+        <div id="rt-docs" class="rev-panel">
+          <div class="rev-fields">
+            <div class="rev-field"><span class="rev-key">RUT</span><span class="rev-val" style="color:var(--verde-medio)">✓ Procesado</span></div>
+            <div class="rev-field"><span class="rev-key">Cámara de Comercio</span><span class="rev-val" style="color:var(--verde-medio)">✓ Procesado</span></div>
+            <div class="rev-field"><span class="rev-key">Declaración de Renta</span><span class="rev-val" style="color:var(--verde-medio)">✓ Procesado</span></div>
+            <div class="rev-field"><span class="rev-key">Cédula Representante Legal</span><span class="rev-val" style="color:#6c3483">✓ Procesado ✦ Cédula</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATOS DEL FIRMANTE -->
+      <div class="card">
+        <div class="card-head"><div class="card-icon">📝</div><div><div class="card-title">Datos del firmante</div></div></div>
+        <div class="grid2">
+          <div class="fg full"><label class="label">Nombre completo del firmante <span class="req">*</span></label><input class="input" id="fNombre" placeholder="Nombre como aparece en el documento"></div>
+          <div class="fg"><label class="label">Documento de identidad <span class="req">*</span></label><input class="input" id="fDoc" placeholder="Número de documento"></div>
+          <div class="fg"><label class="label">Ciudad y fecha</label><input class="input" value="Cúcuta, 08 de mayo de 2026" readonly></div>
+        </div>
+      </div>
+
+      <!-- ════ FIRMA DIGITAL ════ -->
+      <div class="firma-container">
+        <div class="firma-tabs">
+          <button class="firma-tab active" onclick="switchFirma('canvas',this)">✍️ Firmar en pantalla</button>
+          <button class="firma-tab" onclick="switchFirma('upload',this)">📎 Subir imagen de firma</button>
+        </div>
+
+        <!-- PANEL CANVAS -->
+        <div class="firma-panel active" id="fp-canvas">
+          <div style="font-size:12px;color:var(--gris-texto);margin-bottom:10px">Dibuje su firma en el recuadro usando el mouse o su dedo (pantalla táctil).</div>
+
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="sigCanvas"></canvas>
+            <div class="canvas-hint" id="canvasHint">
+              <span class="canvas-hint-icon">✍️</span>
+              <span class="canvas-hint-text">Dibuje su firma aquí</span>
+            </div>
+          </div>
+
+          <div class="canvas-controls">
+            <div class="color-picker-wrap">
+              <span style="font-size:12px;color:var(--gris-texto)">Color:</span>
+              <div class="color-swatch active" style="background:#1c1c1a" data-color="#1c1c1a" onclick="setColor(this)"></div>
+              <div class="color-swatch" style="background:#1a4a2e" data-color="#1a4a2e" onclick="setColor(this)"></div>
+              <div class="color-swatch" style="background:#1a5276" data-color="#1a5276" onclick="setColor(this)"></div>
+            </div>
+            <div class="canvas-btns">
+              <button class="btn-sm" onclick="undoStroke()">↩ Deshacer</button>
+              <button class="btn-sm danger" onclick="clearCanvas()">✕ Borrar</button>
+            </div>
+          </div>
+
+          <div class="firma-status empty" id="firmaStatus">
+            ⚠️ Aún no ha dibujado su firma
+          </div>
+        </div>
+
+        <!-- PANEL UPLOAD -->
+        <div class="firma-panel" id="fp-upload">
+          <div style="font-size:12px;color:var(--gris-texto);margin-bottom:10px">Suba una imagen de su firma manuscrita (PNG, JPG — fondo blanco).</div>
+          <div class="firma-upload-zone" id="firmaUploadZone" onclick="document.getElementById('firmaFile').click()">
+            <div class="upload-icon">🖼️</div>
+            <div class="upload-title">Haga clic para seleccionar imagen</div>
+            <div class="upload-hint">PNG · JPG · máx 2 MB</div>
+            <input type="file" id="firmaFile" accept="image/*" style="display:none" onchange="loadFirmaImg(event)">
+          </div>
+          <img id="firmaPreview" class="firma-preview" alt="Vista previa firma">
+        </div>
+      </div>
+
+      <!-- DECLARACIÓN -->
+      <div class="card">
+        <div class="card-head"><div class="card-icon">⚖️</div><div><div class="card-title">Autorización y declaración jurada</div></div></div>
+        <div class="alert" style="margin-bottom:1rem">
+          ℹ️ Al enviar este formulario declaro bajo la gravedad de juramento que la información suministrada es verídica y verificable, y autorizo a Serfunorte el tratamiento de datos personales conforme a la Ley 1581 de 2012.
+        </div>
+        <label class="check-l" style="font-size:13px">
+          <input type="checkbox" id="aceptoTerminos">
+          Acepto el tratamiento de datos personales y declaro bajo juramento que la información es verídica
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="go(5)">← Volver</button>
+        <button class="btn-dorado" onclick="submit()">Enviar formulario a Serfunorte ✓</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+  <footer class="footer">
+    Portal de Proveedores · Servicios Funerarios Cooperativos del Norte de Santander · Cúcuta, Colombia<br>
+    R-44 Versión 09 · Extracción automática con IA (RUT · Cámara · Renta · Cédula)
+  </footer>
+</div>
+
+<script>
+// ── NAVEGACIÓN ──
+let currentStep = 2;
+function go(n){
+  document.querySelectorAll('.panel[id^="p"]').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p'+n).classList.add('active');
+  document.querySelectorAll('.step').forEach((s,i)=>{
+    s.classList.remove('active','done');
+    if(i+1<n) s.classList.add('done');
+    else if(i+1===n) s.classList.add('active');
+  });
+  currentStep=n;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function doLogin(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('portalScreen').style.display='block';
+}
+function setTipo(t){
+  document.getElementById('sec-n').style.display=t==='n'?'block':'none';
+  document.getElementById('sec-j').style.display=t==='j'?'block':'none';
+  document.getElementById('btnN').classList.toggle('active',t==='n');
+  document.getElementById('btnJ').classList.toggle('active',t==='j');
+}
+
+// ── UPLOAD SIMULADO ──
+const uploads={rut:false,cam:false,ren:false,ced:false};
+function simUpload(k){
+  uploads[k]=true;
+  document.getElementById('z-'+k).classList.add('done');
+  if(uploads.rut&&uploads.cam&&uploads.ren&&uploads.ced){
+    document.getElementById('proc-banner').classList.add('visible');
+    setTimeout(()=>{
+      document.getElementById('proc-banner').classList.remove('visible');
+      document.getElementById('ext-result').classList.add('visible');
+    },2800);
+  }
+}
+
+// ── ACCIONISTAS ──
+function addRow(){
+  const b=document.getElementById('acBody');
+  const r=document.createElement('tr');
+  r.innerHTML=`
+    <td><select><option>CC</option><option>PAS</option><option>NIT</option></select></td>
+    <td><input type="text" placeholder="Número"></td>
+    <td><input type="text" placeholder="Nombre o razón social"></td>
+    <td><select><option>NO</option><option>SI</option></select></td>
+    <td><select><option>NO</option><option>SI</option></select></td>
+    <td><input type="number" placeholder="%" min="0" max="100"></td>`;
+  b.appendChild(r);
+}
+
+// ── REVISIÓN TABS ──
+function revTab(id,el){
+  document.querySelectorAll('.rev-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.rev-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── FIRMA TABS ──
+function switchFirma(mode,el){
+  document.querySelectorAll('.firma-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.firma-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('fp-'+mode).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// CANVAS DE FIRMA
+// ══════════════════════════════════════════
+const canvas = document.getElementById('sigCanvas');
+const ctx    = canvas.getContext('2d');
+let drawing  = false;
+let penColor = '#1c1c1a';
+let strokes  = [];   // historial para undo
+let currentStroke = [];
+let hasSig   = false;
+
+function resizeCanvas(){
+  const wrap = document.getElementById('canvasWrap');
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width  = wrap.clientWidth  * ratio;
+  canvas.height = 200 * ratio;
+  canvas.style.height = '200px';
+  ctx.scale(ratio, ratio);
+  ctx.lineCap   = 'round';
+  ctx.lineJoin  = 'round';
+  ctx.lineWidth = 2.2;
+  redrawAll();
+}
+
+function getPos(e){
+  const r = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  if(e.touches){
+    return { x:(e.touches[0].clientX-r.left), y:(e.touches[0].clientY-r.top) };
+  }
+  return { x:(e.clientX-r.left), y:(e.clientY-r.top) };
+}
+
+canvas.addEventListener('mousedown', e=>{ drawing=true; currentStroke=[]; const p=getPos(e); currentStroke.push(p); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+canvas.addEventListener('mousemove', e=>{ if(!drawing)return; const p=getPos(e); currentStroke.push(p); ctx.lineTo(p.x,p.y); ctx.strokeStyle=penColor; ctx.stroke(); markSig(); });
+canvas.addEventListener('mouseup',   ()=>{ if(drawing&&currentStroke.length){ strokes.push({color:penColor,pts:[...currentStroke]}); } drawing=false; });
+canvas.addEventListener('mouseleave',()=>{ if(drawing&&currentStroke.length){ strokes.push({color:penColor,pts:[...currentStroke]}); } drawing=false; });
+
+canvas.addEventListener('touchstart', e=>{ e.preventDefault(); drawing=true; currentStroke=[]; const p=getPos(e); currentStroke.push(p); ctx.beginPath(); ctx.moveTo(p.x,p.y); },{passive:false});
+canvas.addEventListener('touchmove',  e=>{ e.preventDefault(); if(!drawing)return; const p=getPos(e); currentStroke.push(p); ctx.lineTo(p.x,p.y); ctx.strokeStyle=penColor; ctx.stroke(); markSig(); },{passive:false});
+canvas.addEventListener('touchend',   e=>{ e.preventDefault(); if(drawing&&currentStroke.length){ strokes.push({color:penColor,pts:[...currentStroke]}); } drawing=false; },{passive:false});
+
+function markSig(){
+  hasSig=true;
+  document.getElementById('canvasWrap').classList.add('has-sig');
+  document.getElementById('firmaStatus').className='firma-status ok';
+  document.getElementById('firmaStatus').textContent='✅ Firma registrada correctamente';
+}
+
+function redrawAll(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(const s of strokes){
+    ctx.beginPath();
+    ctx.strokeStyle=s.color;
+    for(let i=0;i<s.pts.length;i++){
+      if(i===0) ctx.moveTo(s.pts[i].x,s.pts[i].y);
+      else ctx.lineTo(s.pts[i].x,s.pts[i].y);
+    }
+    ctx.stroke();
+  }
+}
+
+function undoStroke(){
+  if(strokes.length>0){ strokes.pop(); redrawAll(); }
+  if(strokes.length===0){ clearCanvas(); }
+}
+
+function clearCanvas(){
+  strokes=[]; currentStroke=[];
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  hasSig=false;
+  document.getElementById('canvasWrap').classList.remove('has-sig');
+  document.getElementById('firmaStatus').className='firma-status empty';
+  document.getElementById('firmaStatus').textContent='⚠️ Aún no ha dibujado su firma';
+}
+
+function setColor(el){
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  penColor=el.dataset.color;
+  ctx.strokeStyle=penColor;
+}
+
+function getFirmaBase64(){
+  if(strokes.length===0) return null;
+  return canvas.toDataURL('image/png');
+}
+
+// Upload firma imagen
+function loadFirmaImg(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=document.getElementById('firmaPreview');
+    img.src=ev.target.result;
+    img.style.display='block';
+    document.getElementById('firmaUploadZone').classList.add('done');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── SUBMIT ──
+function submit(){
+  const activeTab = document.querySelector('.firma-tab.active').textContent;
+  const usaCanvas = activeTab.includes('pantalla');
+  const firmaOk   = usaCanvas ? strokes.length>0 : document.getElementById('firmaPreview').style.display==='block';
+
+  if(!document.getElementById('aceptoTerminos').checked){
+    alert('Debe aceptar los términos y la declaración bajo juramento para continuar.');
+    return;
+  }
+  if(!firmaOk){
+    alert('Debe registrar su firma antes de enviar el formulario.');
+    return;
+  }
+
+  const conf = confirm('¿Confirma el envío del formulario R-44 a Serfunorte?\n\nUna vez enviado, el equipo de compras revisará su vinculación.');
+  if(!conf) return;
+
+  const radicado = 'SFN-2026-' + String(Math.floor(Math.random()*9999)+1).padStart(6,'0');
+  document.querySelector('.main').innerHTML=`
+    <div style="text-align:center;padding:4rem 2rem">
+      <div style="font-size:64px;margin-bottom:1rem">✅</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--verde);margin-bottom:.75rem">Formulario enviado exitosamente</div>
+      <p style="font-size:15px;color:var(--gris-texto);max-width:480px;margin:0 auto 2rem">
+        Su solicitud de vinculación ha sido recibida por Serfunorte.<br>
+        El equipo de compras se comunicará en los próximos días hábiles.
+      </p>
+      <div style="background:var(--verde-claro);border-radius:10px;padding:1.25rem;max-width:400px;margin:0 auto;text-align:left">
+        <div style="font-size:13px;font-weight:600;color:var(--verde);margin-bottom:8px">Número de radicado</div>
+        <div style="font-size:24px;font-weight:600;font-family:monospace;color:var(--verde)">${radicado}</div>
+        <div style="font-size:12px;color:var(--gris-texto);margin-top:4px">Conserve este número para seguimiento</div>
+      </div>
+    </div>`;
+}
+
+// Init
+window.addEventListener('load', resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #f5f5f2;
+    color: #1c1c1a;
+  }
+}
+
+@layer components {
+  .input-base {
+    @apply h-[38px] border border-gris-borde rounded-[8px] px-3 font-sans text-sm text-negro bg-white transition-colors outline-none w-full;
+  }
+  .input-base:focus {
+    @apply border-verde-medio ring-2 ring-verde-medio/10;
+  }
+  .input-auto {
+    @apply input-base bg-verde-claro border-verde-borde text-verde;
+  }
+  .input-cedula {
+    @apply input-base bg-cedula border-cedula-borde text-cedula-texto;
+  }
+  .btn-primary {
+    @apply bg-verde text-white font-medium text-sm px-5 py-2.5 rounded-[8px] hover:bg-verde-medio transition-colors;
+  }
+  .btn-secondary {
+    @apply bg-white text-negro font-medium text-sm px-5 py-2.5 rounded-[8px] border border-gris-borde hover:border-verde-medio transition-colors;
+  }
+  .card {
+    @apply bg-white border border-gris-borde rounded-lg p-6 mb-5;
+  }
+  .sec-title {
+    @apply font-serif text-[22px] text-verde mb-1;
+  }
+  .sec-sub {
+    @apply text-sm text-gris-texto mb-6;
+  }
+}
