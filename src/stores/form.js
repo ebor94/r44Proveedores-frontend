@@ -171,6 +171,117 @@ export const useFormStore = defineStore('form', () => {
     referenciasComerciales.value.splice(i, 1)
   }
 
+  function cargarDesdeAPI(data) {
+    proveedorId.value = data.id
+    tipoPersona.value = data.tipo_persona || 'juridica'
+    if (data.radicado) radicado.value = data.radicado
+
+    if (data.tipo_persona === 'juridica') {
+      Object.assign(datosBasicosJuridica, {
+        nit:                data.pj_nit || '',
+        razon_social:       data.pj_razon_social || '',
+        nombre_comercial:   data.pj_nombre_comercial || '',
+        tipo_empresa:       data.pj_tipo_empresa || '',
+        direccion:          data.pj_direccion || '',
+        ciudad:             data.pj_ciudad || '',
+        departamento:       data.pj_departamento || '',
+        telefono:           data.pj_telefono || '',
+        correo:             data.pj_correo || '',
+        pagina_web:         data.pj_pagina_web || '',
+        ciiu:               data.pj_ciiu || '',
+        matricula_mercantil:  data.pj_matricula_mercantil || '',
+        persona_contacto:   data.pj_persona_contacto || '',
+        telefono_contacto:  data.pj_telefono_contacto || '',
+        productos_servicios: data.pj_productos_servicios || '',
+        empleados_total:    data.pj_empleados_total || '',
+        sistema_gestion:    data.pj_sistema_gestion || '',
+      })
+      if (data.pj_nit) extraccion.estado = 'completada'
+    } else {
+      Object.assign(datosBasicosNatural, {
+        cedula_numero:      data.pn_cedula || '',
+        nombre_completo:    data.pn_nombre_completo || '',
+        direccion:          data.pn_direccion || '',
+        ciudad:             data.pn_ciudad || '',
+        departamento:       data.pn_departamento || '',
+        telefono:           data.pn_telefono || '',
+        correo:             data.pn_correo || '',
+        ciiu:               data.pn_ciiu || '',
+        persona_contacto:   data.pn_persona_contacto || '',
+        telefono_contacto:  data.pn_telefono_contacto || '',
+        productos_servicios: data.pn_productos_servicios || '',
+      })
+      if (data.pn_cedula) extraccion.estado = 'completada'
+    }
+
+    const rl = data.representante_legal
+    if (rl) {
+      Object.assign(representanteLegal, {
+        nombre:            rl.nombre || '',
+        cedula:            rl.cedula || '',
+        cargo:             rl.cargo || '',
+        fecha_expedicion:  rl.fecha_expedicion || '',
+        ciudad_expedicion: rl.ciudad_expedicion || '',
+        fecha_nacimiento:  rl.fecha_nacimiento || '',
+        lugar_nacimiento:  rl.lugar_nacimiento || '',
+        cedula_numero_serie: rl.cedula_numero_serie || '',
+      })
+    }
+
+    if (Array.isArray(data.accionistas) && data.accionistas.length) {
+      accionistas.value = data.accionistas.map(a => ({
+        nombre:    a.nombre || '',
+        cedula_nit: a.cedula_nit || '',
+        porcentaje: a.porcentaje || '',
+      }))
+    }
+
+    const fin = data.financiero
+    if (fin) {
+      Object.assign(financiero, {
+        activos_totales:       fin.activos_totales || '',
+        pasivos_totales:       fin.pasivos_totales || '',
+        patrimonio:            fin.patrimonio || '',
+        ingresos_operacionales: fin.ingresos_operacionales || '',
+        utilidad_neta:         fin.utilidad_neta || '',
+        anio_declaracion:      fin.anio_declaracion || '',
+      })
+    }
+
+    if (Array.isArray(data.referencias_bancarias) && data.referencias_bancarias.length) {
+      referenciasBancarias.value = data.referencias_bancarias.map(r => ({
+        entidad:      r.entidad || '',
+        tipo_cuenta:  r.tipo_cuenta || '',
+        numero_cuenta: r.numero_cuenta || '',
+        ciudad:       r.ciudad || '',
+      }))
+    }
+
+    if (Array.isArray(data.referencias_comerciales) && data.referencias_comerciales.length) {
+      referenciasComerciales.value = data.referencias_comerciales.map(r => ({
+        empresa:   r.empresa || '',
+        contacto:  r.contacto || '',
+        telefono:  r.telefono || '',
+        actividad: r.actividad || '',
+      }))
+    }
+
+    const sar = data.sarlaft
+    if (sar) {
+      Object.assign(sarlaft, {
+        es_pep:                sar.es_pep ?? null,
+        familiar_pep:          sar.familiar_pep ?? null,
+        descripcion_actividad: sar.descripcion_actividad || '',
+        origen_fondos:         sar.origen_fondos || '',
+        maneja_efectivo:       sar.maneja_efectivo ?? null,
+        operaciones_extranjero: sar.operaciones_extranjero ?? null,
+        paises_operacion:      sar.paises_operacion || '',
+        en_listas_restrictivas: sar.en_listas_restrictivas ?? null,
+        declaracion_veracidad:  sar.declaracion_veracidad || false,
+      })
+    }
+  }
+
   function reset() {
     pasoActual.value = 1
     proveedorId.value = null
@@ -189,6 +300,7 @@ export const useFormStore = defineStore('form', () => {
     referenciasBancarias, referenciasComerciales,
     sarlaft, firma,
     setExtraccion,
+    cargarDesdeAPI,
     agregarAccionista, eliminarAccionista,
     agregarRefBancaria, eliminarRefBancaria,
     agregarRefComercial, eliminarRefComercial,

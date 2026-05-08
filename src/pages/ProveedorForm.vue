@@ -45,8 +45,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useFormStore } from '@/stores/form'
+import { miFormulario } from '@/services/proveedor'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppStepper from '@/components/layout/AppStepper.vue'
 import S1Documentos from '@/sections/S1Documentos.vue'
@@ -60,6 +61,18 @@ import PantallaExito from '@/components/shared/PantallaExito.vue'
 const form = useFormStore()
 const pasosCompletos = ref([])
 const radicado = ref(null)
+
+onMounted(async () => {
+  try {
+    const res = await miFormulario()
+    if (res?.data) {
+      form.cargarDesdeAPI(res.data)
+      pasosCompletos.value = [1, 2, 3, 4, 5]
+    }
+  } catch {
+    // Formulario nuevo — continúa vacío
+  }
+})
 
 const secciones = [
   { titulo: 'Documentos', subtitulo: 'Sube los cuatro documentos requeridos para iniciar la extracción automática.' },

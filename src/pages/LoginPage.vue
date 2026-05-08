@@ -49,10 +49,6 @@
           </button>
         </form>
 
-        <!-- Demo hint -->
-        <p class="text-center text-[11px] text-gris-texto mt-4">
-          Demo: cualquier correo y contraseña
-        </p>
       </div>
 
       <p class="text-center text-xs text-gris-texto mt-4">
@@ -80,18 +76,6 @@ const error = ref('')
 async function handleLogin() {
   loading.value = true
   error.value = ''
-
-  // Demo mode en desarrollo: login inmediato sin llamada al backend
-  if (import.meta.env.DEV) {
-    await new Promise(r => setTimeout(r, 400))
-    auth.login({
-      token: 'demo-token',
-      usuario: { id: 1, nombre: email.value.split('@')[0] || 'Demo', email: email.value, rol: 'proveedor' },
-    })
-    loading.value = false
-    router.push('/form')
-    return
-  }
 
   try {
     const res = await login(email.value, password.value)

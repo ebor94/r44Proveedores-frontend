@@ -71,6 +71,7 @@
 import { ref, computed } from 'vue'
 import { useFormStore } from '@/stores/form'
 import { subirDocumentos, iniciarPolling } from '@/services/documentos'
+import { crearBorrador } from '@/services/proveedor'
 import SectionCard from '@/components/form/SectionCard.vue'
 import UploadZone from '@/components/upload/UploadZone.vue'
 import AppSpinner from '@/components/shared/AppSpinner.vue'
@@ -89,12 +90,16 @@ async function procesarDocumentos() {
   form.extraccion.estado = 'procesando'
   errorMsg.value = ''
   try {
-    const res = await subirDocumentos(form.proveedorId ?? 0, form.documentos)
-    const pid = res.data?.proveedor_id ?? form.proveedorId
-    form.proveedorId = pid
+    // Crear borrador si aún no existe un proveedor
+    if (!form.proveedorId) {
+      const borradorRes = await crearBorrador(form.tipoPersona)
+      form.proveedorId = borradorRes.data?.id
+    }
+
+    await subirDocumentos(form.proveedorId, form.documentos)
 
     stopPolling = iniciarPolling(
-      pid,
+      form.proveedorId,
       (datos) => {
         form.setExtraccion(datos)
         emit('completado')
@@ -105,39 +110,8 @@ async function procesarDocumentos() {
       }
     )
   } catch (err) {
-    // Demo mode: simular extracción exitosa
-    if (import.meta.env.DEV || err.message?.includes('Network')) {
-      setTimeout(() => {
-        form.setExtraccion({
-          nit: '900.123.456-7',
-          razon_social: 'Empresa Demo S.A.S.',
-          direccion: 'Calle 5 # 10-20',
-          ciudad: 'Cúcuta',
-          departamento: 'Norte de Santander',
-          telefono: '(607) 5712345',
-          correo: 'contacto@empresademo.com',
-          ciiu: '4690',
-          matricula_mercantil: '123456',
-          rl_nombre: 'Juan Carlos Pérez',
-          rl_cedula: '13.500.000',
-          fecha_expedicion: '2010-05-15',
-          ciudad_expedicion: 'Cúcuta',
-          fecha_nacimiento: '1980-03-22',
-          lugar_nacimiento: 'Cúcuta',
-          cedula_numero_serie: '00000000',
-          activos_totales: '500.000.000',
-          pasivos_totales: '200.000.000',
-          patrimonio: '300.000.000',
-          ingresos_operacionales: '800.000.000',
-          utilidad_neta: '50.000.000',
-          anio_declaracion: '2023',
-        })
-        emit('completado')
-      }, 3000)
-    } else {
-      form.extraccion.estado = 'error'
-      errorMsg.value = err.message
-    }
+    form.extraccion.estado = 'error'
+    errorMsg.value = err.message
   }
 }
 </script>

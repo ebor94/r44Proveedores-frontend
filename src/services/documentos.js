@@ -5,13 +5,13 @@ export async function subirDocumentos(proveedorId, archivos) {
   Object.entries(archivos).forEach(([tipo, file]) => {
     if (file) fd.append(tipo, file)
   })
-  return api.post(`/documentos/${proveedorId}`, fd, {
+  return api.post(`/r44/documentos/${proveedorId}`, fd, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }
 
 export async function estadoExtraccion(proveedorId) {
-  return api.get(`/extraccion/estado/${proveedorId}`)
+  return api.get(`/r44/extraccion/estado/${proveedorId}`)
 }
 
 // Polling hasta que el estado sea 'extraccion_completada' o se agote el tiempo

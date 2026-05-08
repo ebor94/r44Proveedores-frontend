@@ -83,7 +83,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useFormStore } from '@/stores/form'
-import { crearProveedor } from '@/services/proveedor'
+import { crearProveedor, actualizarProveedor } from '@/services/proveedor'
 import SectionCard from '@/components/form/SectionCard.vue'
 import FirmaCanvas from '@/components/firma/FirmaCanvas.vue'
 import AppSpinner from '@/components/shared/AppSpinner.vue'
@@ -111,21 +111,22 @@ async function enviar() {
       referencias_bancarias: form.referenciasBancarias,
       referencias_comerciales: form.referenciasComerciales,
       sarlaft: form.sarlaft,
-      firma: form.firma.base64,
+      firma: { base64: form.firma.base64, aceptacion_terminos: form.firma.aceptacion_terminos },
     }
-    const res = await crearProveedor(payload)
-    const radicado = res.data?.radicado ?? `SFN-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 999999)).padStart(6, '0')}`
+
+    let res
+    if (form.proveedorId) {
+      res = await actualizarProveedor(form.proveedorId, payload)
+    } else {
+      res = await crearProveedor(payload)
+    }
+
+    const radicado = res.data?.radicado
+      ?? `SFN-${new Date().getFullYear()}-${String(res.data?.id ?? 0).padStart(6, '0')}`
     form.radicado = radicado
     emit('enviado', radicado)
   } catch (err) {
-    // Demo mode
-    if (import.meta.env.DEV || err.message?.includes('Network')) {
-      const radicado = `SFN-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 999999)).padStart(6, '0')}`
-      form.radicado = radicado
-      emit('enviado', radicado)
-    } else {
-      errorEnvio.value = err.message
-    }
+    errorEnvio.value = err.message
   } finally {
     enviando.value = false
   }
