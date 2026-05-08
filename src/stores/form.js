@@ -281,15 +281,15 @@ export const useFormStore = defineStore('form', () => {
     const sar = data.sarlaft
     if (sar) {
       Object.assign(sarlaft, {
-        es_pep:                sar.es_pep ?? null,
-        familiar_pep:          sar.familiar_pep ?? null,
-        descripcion_actividad: sar.descripcion_actividad || '',
-        origen_fondos:         sar.origen_fondos || '',
-        maneja_efectivo:       sar.maneja_efectivo ?? null,
-        operaciones_extranjero: sar.operaciones_extranjero ?? null,
-        paises_operacion:      sar.paises_operacion || '',
-        en_listas_restrictivas: sar.en_listas_restrictivas ?? null,
-        declaracion_veracidad:  sar.declaracion_veracidad || false,
+        es_pep:                 sar.es_pep                                          ?? null,
+        familiar_pep:           sar.vinculo_familiar_pep   ?? sar.familiar_pep      ?? null,
+        descripcion_actividad:  sar.descripcion_actividad                           || '',
+        origen_fondos:          sar.declaracion_origen_fondos ?? sar.origen_fondos  || '',
+        maneja_efectivo:        sar.maneja_recursos_publicos ?? sar.maneja_efectivo  ?? null,
+        operaciones_extranjero: sar.opera_moneda_extranjera  ?? sar.operaciones_extranjero ?? null,
+        paises_operacion:       sar.moneda_ext_cuales       ?? sar.paises_operacion || '',
+        en_listas_restrictivas: sar.sancionado_laft         ?? sar.en_listas_restrictivas ?? null,
+        declaracion_veracidad:  sar.declaracion_veracidad                           || false,
       })
     }
   }
