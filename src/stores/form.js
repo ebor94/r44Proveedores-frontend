@@ -270,10 +270,11 @@ export const useFormStore = defineStore('form', () => {
 
     if (Array.isArray(data.referencias_comerciales) && data.referencias_comerciales.length) {
       referenciasComerciales.value = data.referencias_comerciales.map(r => ({
-        empresa:   r.empresa || '',
-        contacto:  r.contacto || '',
-        telefono:  r.telefono || '',
-        actividad: r.actividad || '',
+        empresa:   r.empresa            || '',
+        contacto:  r.contacto           || '',
+        telefono:  r.telefono           || '',
+        ciudad:    r.ciudad             || '',
+        actividad: r.actividad_relacion || r.actividad || '',
       }))
     }
 
