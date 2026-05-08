@@ -238,9 +238,12 @@ export const useFormStore = defineStore('form', () => {
 
     if (Array.isArray(data.accionistas) && data.accionistas.length) {
       accionistas.value = data.accionistas.map(a => ({
-        nombre:    a.nombre || '',
-        cedula_nit: a.cedula_nit || '',
-        porcentaje: a.porcentaje || '',
+        nombre:                  a.razon_social_nombre     || a.nombre     || '',
+        cedula_nit:              a.numero_documento        || a.cedula_nit || '',
+        tipo_documento:          a.tipo_documento          || '',
+        porcentaje:              a.porcentaje_participacion ?? a.porcentaje ?? '',
+        administra_rec_publicos: a.administra_rec_publicos ?? false,
+        es_pep:                  a.es_pep                  ?? false,
       }))
     }
 

@@ -183,12 +183,12 @@ const autoN = computed(() => ({
 }))
 
 const autoRl = computed(() => ({
-  nombre: !!ext.value.rl_nombre,
-  cedula: !!ext.value.rl_cedula,
-  fecha_expedicion: !!ext.value.fecha_expedicion,
-  ciudad_expedicion: !!ext.value.ciudad_expedicion,
-  fecha_nacimiento: !!ext.value.fecha_nacimiento,
-  lugar_nacimiento: !!ext.value.lugar_nacimiento,
-  cedula_numero_serie: !!ext.value.cedula_numero_serie,
+  nombre:              !!ext.value.rl_nombre,
+  cedula:              !!ext.value.rl_numero_doc,
+  fecha_expedicion:    !!ext.value.rl_fecha_expedicion,
+  ciudad_expedicion:   !!ext.value.rl_lugar_expedicion,
+  fecha_nacimiento:    !!ext.value.rl_fecha_nacimiento,
+  lugar_nacimiento:    !!ext.value.rl_lugar_nacimiento,
+  cedula_numero_serie: !!ext.value.rl_cedula_serie,
 }))
 </script>
