@@ -48,11 +48,11 @@ const f = form.financiero
 const ext = computed(() => form.extraccion.datos ?? {})
 
 const auto = computed(() => ({
-  anio_declaracion: !!ext.value.anio_declaracion,
-  activos_totales: !!ext.value.activos_totales,
-  pasivos_totales: !!ext.value.pasivos_totales,
-  patrimonio: !!ext.value.patrimonio,
-  ingresos_operacionales: !!ext.value.ingresos_operacionales,
-  utilidad_neta: !!ext.value.utilidad_neta,
+  anio_declaracion:       !!ext.value.anio_gravable,
+  activos_totales:        !!ext.value.total_activos,
+  pasivos_totales:        !!ext.value.total_pasivos,
+  patrimonio:             !!ext.value.total_patrimonio,
+  ingresos_operacionales: !!ext.value.total_ingresos_brutos,
+  utilidad_neta:          !!ext.value.utilidad_operacional,
 }))
 </script>

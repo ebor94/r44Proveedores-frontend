@@ -250,12 +250,12 @@ export const useFormStore = defineStore('form', () => {
     const fin = data.financiero
     if (fin) {
       Object.assign(financiero, {
-        activos_totales:       fin.activos_totales || '',
-        pasivos_totales:       fin.pasivos_totales || '',
-        patrimonio:            fin.patrimonio || '',
-        ingresos_operacionales: fin.ingresos_operacionales || '',
-        utilidad_neta:         fin.utilidad_neta || '',
-        anio_declaracion:      fin.anio_declaracion || '',
+        anio_declaracion:       fin.anio_gravable              || fin.anio_declaracion        || '',
+        activos_totales:        fin.total_activos              || fin.activos_totales          || '',
+        pasivos_totales:        fin.total_pasivos              || fin.pasivos_totales          || '',
+        patrimonio:             fin.total_patrimonio           || fin.patrimonio               || '',
+        ingresos_operacionales: fin.total_ingresos_brutos      || fin.ingresos_operacionales   || '',
+        utilidad_neta:          fin.utilidad_operacional       || fin.utilidad_neta            || '',
       })
     }
 
