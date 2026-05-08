@@ -183,35 +183,32 @@ export const useFormStore = defineStore('form', () => {
         nombre_comercial:   data.pj_nombre_comercial || '',
         tipo_empresa:       data.pj_tipo_empresa || '',
         direccion:          data.pj_direccion || '',
-        ciudad:             data.pj_ciudad || '',
+        ciudad:             data.pj_municipio || '',
         departamento:       data.pj_departamento || '',
-        telefono:           data.pj_telefono || '',
+        telefono:           data.pj_telefono_fijo || '',
         correo:             data.pj_correo || '',
-        pagina_web:         data.pj_pagina_web || '',
-        ciiu:               data.pj_ciiu || '',
-        matricula_mercantil:  data.pj_matricula_mercantil || '',
+        ciiu:               data.pj_ciiu_principal || '',
+        matricula_mercantil: data.pj_matricula_numero || '',
         persona_contacto:   data.pj_persona_contacto || '',
-        telefono_contacto:  data.pj_telefono_contacto || '',
-        productos_servicios: data.pj_productos_servicios || '',
-        empleados_total:    data.pj_empleados_total || '',
-        sistema_gestion:    data.pj_sistema_gestion || '',
+        telefono_contacto:  data.pj_tel_contacto || '',
+        productos_servicios: data.productos_servicios || '',
+        empleados_total:    data.total_empleados || '',
+        sistema_gestion:    data.tiene_sistema_gestion || '',
       })
       if (data.pj_nit) extraccion.estado = 'completada'
     } else {
       Object.assign(datosBasicosNatural, {
-        cedula_numero:      data.pn_cedula || '',
+        cedula_numero:      data.pn_numero_documento || '',
         nombre_completo:    data.pn_nombre_completo || '',
-        direccion:          data.pn_direccion || '',
-        ciudad:             data.pn_ciudad || '',
-        departamento:       data.pn_departamento || '',
-        telefono:           data.pn_telefono || '',
+        direccion:          data.pn_direccion_domicilio || '',
+        ciudad:             data.pn_municipio_domicilio || '',
+        departamento:       data.pn_dpto_domicilio || '',
+        telefono:           data.pn_telefono_domicilio || '',
         correo:             data.pn_correo || '',
         ciiu:               data.pn_ciiu || '',
-        persona_contacto:   data.pn_persona_contacto || '',
-        telefono_contacto:  data.pn_telefono_contacto || '',
-        productos_servicios: data.pn_productos_servicios || '',
+        productos_servicios: data.productos_servicios || '',
       })
-      if (data.pn_cedula) extraccion.estado = 'completada'
+      if (data.pn_numero_documento) extraccion.estado = 'completada'
     }
 
     const rl = data.representante_legal
