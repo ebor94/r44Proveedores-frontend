@@ -115,37 +115,48 @@ export const useFormStore = defineStore('form', () => {
   function setExtraccion(datos) {
     extraccion.datos = datos
     extraccion.estado = 'completada'
-    // Poblar campos automáticos desde datos extraídos
-    if (datos.rut || datos.camara || datos.renta || datos.cedula) {
-      const d = datos
-      Object.assign(datosBasicosJuridica, {
-        nit: d.nit ?? datosBasicosJuridica.nit,
-        razon_social: d.razon_social ?? datosBasicosJuridica.razon_social,
-        direccion: d.direccion ?? datosBasicosJuridica.direccion,
-        ciudad: d.ciudad ?? datosBasicosJuridica.ciudad,
-        telefono: d.telefono ?? datosBasicosJuridica.telefono,
-        correo: d.correo ?? datosBasicosJuridica.correo,
-        ciiu: d.ciiu ?? datosBasicosJuridica.ciiu,
-        matricula_mercantil: d.matricula_mercantil ?? datosBasicosJuridica.matricula_mercantil,
-      })
-      Object.assign(representanteLegal, {
-        nombre: d.rl_nombre ?? representanteLegal.nombre,
-        cedula: d.rl_cedula ?? representanteLegal.cedula,
-        fecha_expedicion: d.fecha_expedicion ?? representanteLegal.fecha_expedicion,
-        ciudad_expedicion: d.ciudad_expedicion ?? representanteLegal.ciudad_expedicion,
-        fecha_nacimiento: d.fecha_nacimiento ?? representanteLegal.fecha_nacimiento,
-        lugar_nacimiento: d.lugar_nacimiento ?? representanteLegal.lugar_nacimiento,
-        cedula_numero_serie: d.cedula_numero_serie ?? representanteLegal.cedula_numero_serie,
-      })
-      Object.assign(financiero, {
-        activos_totales: d.activos_totales ?? financiero.activos_totales,
-        pasivos_totales: d.pasivos_totales ?? financiero.pasivos_totales,
-        patrimonio: d.patrimonio ?? financiero.patrimonio,
-        ingresos_operacionales: d.ingresos_operacionales ?? financiero.ingresos_operacionales,
-        utilidad_neta: d.utilidad_neta ?? financiero.utilidad_neta,
-        anio_declaracion: d.anio_declaracion ?? financiero.anio_declaracion,
-      })
-    }
+    if (!datos) return
+    const d = datos
+    // campos_r44 de n8n — aplica a jurídica y natural según tipo activo
+    Object.assign(datosBasicosJuridica, {
+      nit:                 d.nit                        ?? datosBasicosJuridica.nit,
+      razon_social:        d.razon_social               ?? datosBasicosJuridica.razon_social,
+      nombre_comercial:    d.nombre_comercial           ?? datosBasicosJuridica.nombre_comercial,
+      direccion:           d.direccion_principal        ?? datosBasicosJuridica.direccion,
+      ciudad:              d.municipio_nombre           ?? datosBasicosJuridica.ciudad,
+      departamento:        d.departamento_nombre        ?? datosBasicosJuridica.departamento,
+      telefono:            d.telefono_1                 ?? datosBasicosJuridica.telefono,
+      correo:              d.correo_electronico         ?? datosBasicosJuridica.correo,
+      ciiu:                d.actividad_principal_ciiu   ?? datosBasicosJuridica.ciiu,
+      matricula_mercantil: d.matricula_numero           ?? datosBasicosJuridica.matricula_mercantil,
+    })
+    Object.assign(datosBasicosNatural, {
+      cedula_numero:  d.numero_identificacion           ?? d.nit ?? datosBasicosNatural.cedula_numero,
+      nombre_completo: d.nombre_completo                ?? datosBasicosNatural.nombre_completo,
+      direccion:      d.direccion_principal             ?? datosBasicosNatural.direccion,
+      ciudad:         d.municipio_nombre                ?? datosBasicosNatural.ciudad,
+      departamento:   d.departamento_nombre             ?? datosBasicosNatural.departamento,
+      telefono:       d.telefono_1                      ?? datosBasicosNatural.telefono,
+      correo:         d.correo_electronico              ?? datosBasicosNatural.correo,
+      ciiu:           d.actividad_principal_ciiu        ?? datosBasicosNatural.ciiu,
+    })
+    Object.assign(representanteLegal, {
+      nombre:              d.rl_nombre            ?? representanteLegal.nombre,
+      cedula:              d.rl_numero_doc        ?? representanteLegal.cedula,
+      fecha_expedicion:    d.rl_fecha_expedicion  ?? representanteLegal.fecha_expedicion,
+      ciudad_expedicion:   d.rl_lugar_expedicion  ?? representanteLegal.ciudad_expedicion,
+      fecha_nacimiento:    d.rl_fecha_nacimiento  ?? representanteLegal.fecha_nacimiento,
+      lugar_nacimiento:    d.rl_lugar_nacimiento  ?? representanteLegal.lugar_nacimiento,
+      cedula_numero_serie: d.rl_cedula_serie      ?? representanteLegal.cedula_numero_serie,
+    })
+    Object.assign(financiero, {
+      activos_totales:        d.total_activos           ?? financiero.activos_totales,
+      pasivos_totales:        d.total_pasivos           ?? financiero.pasivos_totales,
+      patrimonio:             d.total_patrimonio        ?? financiero.patrimonio,
+      ingresos_operacionales: d.total_ingresos_brutos   ?? financiero.ingresos_operacionales,
+      utilidad_neta:          d.utilidad_operacional    ?? financiero.utilidad_neta,
+      anio_declaracion:       d.anio_gravable           ?? financiero.anio_declaracion,
+    })
   }
 
   function agregarAccionista() {
@@ -214,13 +225,13 @@ export const useFormStore = defineStore('form', () => {
     const rl = data.representante_legal
     if (rl) {
       Object.assign(representanteLegal, {
-        nombre:            rl.nombre || '',
-        cedula:            rl.cedula || '',
-        cargo:             rl.cargo || '',
-        fecha_expedicion:  rl.fecha_expedicion || '',
-        ciudad_expedicion: rl.ciudad_expedicion || '',
-        fecha_nacimiento:  rl.fecha_nacimiento || '',
-        lugar_nacimiento:  rl.lugar_nacimiento || '',
+        nombre:             rl.nombres_apellidos || rl.nombre || '',
+        cedula:             rl.numero_documento  || rl.cedula || '',
+        cargo:              rl.cargo || '',
+        fecha_expedicion:   rl.fecha_expedicion  || '',
+        ciudad_expedicion:  rl.ciudad_expedicion || '',
+        fecha_nacimiento:   rl.fecha_nacimiento  || '',
+        lugar_nacimiento:   rl.lugar_nacimiento  || '',
         cedula_numero_serie: rl.cedula_numero_serie || '',
       })
     }
