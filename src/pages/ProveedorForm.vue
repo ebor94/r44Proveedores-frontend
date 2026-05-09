@@ -75,7 +75,7 @@ onMounted(async () => {
 })
 
 const secciones = [
-  { titulo: 'Documentos', subtitulo: 'Sube los cuatro documentos requeridos para iniciar la extracción automática.' },
+  { titulo: 'Documentos', subtitulo: 'Sube RUT y Cédula (obligatorios). Cámara de Comercio y Declaración de Renta son opcionales.' },
   { titulo: 'Datos básicos', subtitulo: 'Verifica la información extraída y completa los campos manuales.' },
   { titulo: 'Información financiera', subtitulo: 'Datos financieros extraídos de la Declaración de Renta.' },
   { titulo: 'Referencias', subtitulo: 'Registra hasta 2 referencias bancarias y 2 comerciales.' },

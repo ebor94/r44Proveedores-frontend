@@ -1,15 +1,15 @@
 <template>
   <div>
     <!-- Grid de upload -->
-    <SectionCard icon="📎" title="Documentos requeridos" subtitle="Sube los cuatro documentos en PDF (cédula también acepta JPG/PNG)">
+    <SectionCard icon="📎" title="Documentos" subtitle="RUT y Cédula son obligatorios. Cámara de Comercio y Declaración de Renta son opcionales (si aplica).">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-        <UploadZone label="RUT (DIAN)" icon="🏛️" hint="PDF · máx. 10 MB" accept=".pdf"
+        <UploadZone label="RUT (DIAN)" icon="🏛️" hint="PDF · máx. 10 MB · Requerido" accept=".pdf"
           v-model="form.documentos.rut" />
-        <UploadZone label="Cámara de Comercio" icon="🏢" hint="PDF · máx. 10 MB" accept=".pdf"
+        <UploadZone label="Cámara de Comercio" icon="🏢" hint="PDF · máx. 10 MB · Opcional" accept=".pdf"
           v-model="form.documentos.camara" />
-        <UploadZone label="Declaración de Renta" icon="📊" hint="PDF · máx. 10 MB" accept=".pdf"
+        <UploadZone label="Declaración de Renta" icon="📊" hint="PDF · máx. 10 MB · Opcional" accept=".pdf"
           v-model="form.documentos.renta" />
-        <UploadZone label="Cédula R.L." icon="🪪" hint="PDF, JPG o PNG" accept=".pdf,.jpg,.jpeg,.png"
+        <UploadZone label="Cédula R.L." icon="🪪" hint="PDF, JPG o PNG · Requerido" accept=".pdf,.jpg,.jpeg,.png"
           :esCedula="true" v-model="form.documentos.cedula" />
       </div>
 
@@ -20,6 +20,7 @@
             :class="form.documentos[doc] ? 'bg-verde-medio' : 'bg-gris-borde'" />
         </div>
         {{ docsSubidos }}/4 documentos cargados
+        <span class="text-gris-texto/60">(mín. RUT + Cédula)</span>
       </div>
     </SectionCard>
 
@@ -28,7 +29,7 @@
       <AppSpinner size="lg" color="#1a5276" />
       <div>
         <div class="font-semibold text-azul">Extrayendo información con IA...</div>
-        <div class="text-xs text-azul/70 mt-0.5">Claude API está procesando los 4 documentos en paralelo. Esto puede tomar hasta 3 minutos.</div>
+        <div class="text-xs text-azul/70 mt-0.5">Claude API está procesando los documentos en paralelo. Esto puede tomar hasta 3 minutos.</div>
       </div>
     </div>
 
@@ -39,7 +40,7 @@
         <span class="font-semibold text-verde">Extracción completada</span>
       </div>
       <p class="text-sm text-verde/80">
-        Los campos marcados con fondo verde (RUT/Cámara/Renta) y morado (Cédula) se han completado automáticamente.
+        Los campos marcados con fondo verde (RUT/Cámara/Renta) y morado (Cédula) se han completado automáticamente con los documentos subidos.
         Puedes continuar al paso siguiente.
       </p>
     </div>
@@ -58,7 +59,7 @@
     <div v-if="estado === 'pendiente'" class="flex justify-end mt-2">
       <button
         class="btn-primary"
-        :disabled="docsSubidos < 4"
+        :disabled="!form.documentos.rut || !form.documentos.cedula"
         @click="procesarDocumentos"
       >
         Procesar documentos →
