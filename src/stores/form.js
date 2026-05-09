@@ -94,15 +94,19 @@ export const useFormStore = defineStore('form', () => {
 
   // Sección VI — SARLAFT
   const sarlaft = reactive({
-    es_pep: null,
-    familiar_pep: null,
-    descripcion_actividad: '',
-    origen_fondos: '',
-    maneja_efectivo: null,
-    operaciones_extranjero: null,
-    paises_operacion: '',
-    en_listas_restrictivas: null,
-    declaracion_veracidad: false,
+    tiene_sistema_control:       null,
+    tiene_cod_conducta:          false,
+    tiene_manual_siplaft:        false,
+    tiene_manual_procedimientos: false,
+    tiene_manual_sarlaft:        false,
+    maneja_efectivo:             null,
+    es_pep:                      null,
+    familiar_pep:                null,
+    operaciones_extranjero:      null,
+    paises_operacion:            '',
+    en_listas_restrictivas:      null,
+    origen_fondos:               '',
+    declaracion_veracidad:       false,
   })
 
   // Firma
@@ -281,15 +285,19 @@ export const useFormStore = defineStore('form', () => {
     const sar = data.sarlaft
     if (sar) {
       Object.assign(sarlaft, {
-        es_pep:                 sar.es_pep                                          ?? null,
-        familiar_pep:           sar.vinculo_familiar_pep   ?? sar.familiar_pep      ?? null,
-        descripcion_actividad:  sar.descripcion_actividad                           || '',
-        origen_fondos:          sar.declaracion_origen_fondos ?? sar.origen_fondos  ?? '',
-        maneja_efectivo:        sar.maneja_recursos_publicos ?? sar.maneja_efectivo  ?? null,
-        operaciones_extranjero: sar.opera_moneda_extranjera  ?? sar.operaciones_extranjero ?? null,
-        paises_operacion:       sar.moneda_ext_cuales        ?? sar.paises_operacion ?? '',
-        en_listas_restrictivas: sar.sancionado_laft         ?? sar.en_listas_restrictivas ?? null,
-        declaracion_veracidad:  sar.declaracion_veracidad                           || false,
+        tiene_sistema_control:       sar.tiene_sistema_control       ?? null,
+        tiene_cod_conducta:          sar.tiene_cod_conducta          ?? false,
+        tiene_manual_siplaft:        sar.tiene_manual_siplaft        ?? false,
+        tiene_manual_procedimientos: sar.tiene_manual_procedimientos ?? false,
+        tiene_manual_sarlaft:        sar.tiene_manual_sarlaft        ?? false,
+        maneja_efectivo:             sar.maneja_recursos_publicos    ?? sar.maneja_efectivo       ?? null,
+        es_pep:                      sar.es_pep                      ?? null,
+        familiar_pep:                sar.vinculo_familiar_pep        ?? sar.familiar_pep          ?? null,
+        operaciones_extranjero:      sar.opera_moneda_extranjera     ?? sar.operaciones_extranjero ?? null,
+        paises_operacion:            sar.moneda_ext_cuales           ?? sar.paises_operacion       ?? '',
+        en_listas_restrictivas:      sar.sancionado_laft             ?? sar.en_listas_restrictivas ?? null,
+        origen_fondos:               sar.declaracion_origen_fondos   ?? sar.origen_fondos          ?? '',
+        declaracion_veracidad:       sar.declaracion_veracidad       ?? false,
       })
     }
   }
