@@ -204,7 +204,7 @@ export const useFormStore = defineStore('form', () => {
         telefono_contacto:  data.pj_tel_contacto || '',
         productos_servicios: data.productos_servicios || '',
         empleados_total:    data.total_empleados || '',
-        sistema_gestion:    data.tiene_sistema_gestion || '',
+        sistema_gestion:    data.cual_certificacion || '',
       })
       if (data.pj_nit) extraccion.estado = 'completada'
     } else {
